@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SPEAKEE - AI Interview Practice</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Paytone+One&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+    .container {
+        width: 100%;
+        max-width: 420px;
+        height: 100vh;
+        max-height: 900px;
+        background: #F5F5F5;
+        border-radius: 0;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* Status Bar - iOS Style */
+    .status-bar {
+        background: #F5F5F5;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 15px;
+        font-weight: 600;
+        color: #000000;
+        height: 44px;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+        letter-spacing: -0.01em;
+    }
+
+    .status-left {
+        display: flex;
+        align-items: center;
+    }
+
+    .status-time {
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+    }
+
+    .status-right {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .status-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* iOS Signal Icon */
+    .signal-icon {
+        width: 18px;
+        height: 11px;
+        display: flex;
+        align-items: flex-end;
+        gap: 1.5px;
+        padding-right: 1px;
+    }
+
+    .signal-bar {
+        width: 2.5px;
+        background: #000;
+        border-radius: 1px 1px 0 0;
+    }
+
+    .signal-bar:nth-child(1) { height: 3px; }
+    .signal-bar:nth-child(2) { height: 4.5px; }
+    .signal-bar:nth-child(3) { height: 6.5px; }
+    .signal-bar:nth-child(4) { height: 9px; }
+
+    /* iOS Wi-Fi Icon */
+    .wifi-icon {
+        width: 16px;
+        height: 12px;
+        position: relative;
+        margin: 0 1px;
+    }
+
+    .wifi-icon svg {
+        width: 100%;
+        height: 100%;
+        fill: #000;
+    }
+
+    /* iOS Battery Icon */
+    .battery-icon {
+        width: 24px;
+        height: 11px;
+        border: 1.5px solid #9ca3af;
+        border-radius: 3px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 1px;
+        margin-left: 1px;
+        background: transparent;
+    }
+
+    .battery-fill {
+        height: 100%;
+        background: #000;
+        border-radius: 1px;
+        width: 100%;
+    }
+
+    .battery-tip {
+        position: absolute;
+        right: -3px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 2px;
+        height: 5px;
+        background: #9ca3af;
+        border-radius: 0 1px 1px 0;
+    }
+
+    /* Header */
+    .header {
+        background: #F5F5F5;
+        color: #1f2937;
+        padding: 16px 20px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+
+    .logo-icon {
+        width: 32px;
+        height: 32px;
+        background: white;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .logo-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .logo-text {
+        font-family: 'Paytone One', sans-serif;
+        font-size: 28px;
+        font-weight: 400;
+        letter-spacing: -0.5px;
+        background: linear-gradient(135deg, #ff6b9d 0%, #ffd93d 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .topic-label {
+        font-size: 11px;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+    }
+
+    .topic-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    /* Chat Area */
+    .chat-area {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        background: #F5F5F5;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+        .chat-area::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .chat-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-area::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 2px;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 8px;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.ai {
+            justify-content: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .bubble {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            word-wrap: break-word;
+            line-height: 1.5;
+            font-size: 15px;
+        }
+
+        .bubble.ai {
+            background: #e5e7eb;
+            color: #1f2937;
+            border-bottom-left-radius: 4px;
+        }
+
+        .bubble.user {
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffd93d 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .bubble.recording {
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffd93d 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bubble.recording .waveform-mini {
+            display: flex;
+            gap: 3px;
+            align-items: center;
+        }
+
+        .waveform-mini .bar {
+            width: 3px;
+            height: 12px;
+            background: white;
+            border-radius: 2px;
+            animation: wave 1s ease-in-out infinite;
+        }
+
+        .waveform-mini .bar:nth-child(2) { animation-delay: 0.1s; }
+        .waveform-mini .bar:nth-child(3) { animation-delay: 0.2s; }
+        .waveform-mini .bar:nth-child(4) { animation-delay: 0.3s; }
+        .waveform-mini .bar:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes wave {
+            0%, 100% { height: 8px; }
+            50% { height: 16px; }
+        }
+
+    /* Bottom Controls */
+    .bottom-controls {
+        background: white;
+        padding: 20px;
+        border-top: 1px solid #e5e7eb;
+        position: relative;
+        border-top-left-radius: 24px;
+        border-top-right-radius: 24px;
+    }
+
+        /* Idle State */
+        .idle-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .mic-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffd93d 100%);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(255, 107, 157, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .mic-button:active {
+            transform: scale(0.95);
+        }
+
+        .mic-button::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffd93d 100%);
+            opacity: 0.6;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .mic-icon {
+            width: 36px;
+            height: 36px;
+            fill: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hint-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffd93d 100%);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .hint-button:active {
+            transform: scale(0.9);
+        }
+
+    .hint-icon {
+        width: 28px;
+        height: 28px;
+    }
+
+        /* Recording State */
+        .recording-state {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding-top: 8px;
+        }
+
+        .recording-state.active {
+            display: flex;
+        }
+
+        .waveform-container {
+            width: 100%;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 0 20px;
+        }
+
+        .waveform-bar {
+            width: 5px;
+            height: 20px;
+            background: #3b82f6;
+            border-radius: 3px;
+            transition: height 0.15s ease;
+        }
+
+        .control-pill {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            background: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            width: 100%;
+            max-width: 340px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .control-button {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .control-button:active {
+            transform: scale(0.92);
+        }
+
+        .control-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cancel-button {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .cancel-button:hover {
+            background: #fecaca;
+        }
+
+        .cancel-button svg {
+            stroke: #dc2626;
+        }
+
+        .cancel-label {
+            color: #dc2626;
+        }
+
+        .send-button {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .send-button:hover {
+            background: #a7f3d0;
+        }
+
+        .send-button svg {
+            stroke: #059669;
+        }
+
+        .send-label {
+            color: #059669;
+        }
+
+        .mic-button-recording {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffd93d 100%);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 4px 16px rgba(255, 107, 157, 0.4);
+        }
+
+        .mic-button-recording::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffd93d 100%);
+            opacity: 0.4;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .mic-icon-recording {
+            width: 32px;
+            height: 32px;
+            fill: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .timer {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            font-variant-numeric: tabular-nums;
+            margin-top: 4px;
+        }
+
+        .listening-badge {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .listening-badge .dot {
+            width: 8px;
+            height: 8px;
+            background: #3b82f6;
+            border-radius: 50%;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Hint button in recording state */
+        .hint-button-recording {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffd93d 100%);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.4);
+            transition: all 0.3s ease;
+            opacity: 0.6;
+            transform: scale(0.9);
+        }
+
+        .hint-button-recording.active {
+            opacity: 1;
+            transform: scale(1);
+            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.6);
+            animation: hintPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes hintPulse {
+            0%, 100% {
+                box-shadow: 0 6px 20px rgba(255, 107, 157, 0.6);
+            }
+            50% {
+                box-shadow: 0 8px 28px rgba(255, 107, 157, 0.8);
+            }
+        }
+
+        .hint-notification {
+            position: absolute;
+            bottom: 85px;
+            right: 20px;
+            background: white;
+            padding: 10px 14px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            font-size: 12px;
+            color: #1f2937;
+            white-space: nowrap;
+            display: none;
+            animation: slideDown 0.3s ease-out;
+            z-index: 100;
+        }
+
+        .hint-notification.show {
+            display: block;
+        }
+
+        .hint-notification::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid white;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hint Popup */
+        .hint-popup {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            max-width: 360px;
+            width: calc(100% - 40px);
+            display: none;
+            z-index: 1000;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .hint-popup.show {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .hint-popup h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1f2937;
+        }
+
+        .hint-popup p {
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .hint-popup .close-hint {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+
+        /* Responsive */
+        @media (max-width: 420px) {
+            .container {
+                border-radius: 0;
+                height: 100vh;
+                max-height: 100vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span class="status-time" id="statusTime">9:41</span>
+            </div>
+            <div class="status-right">
+                <div class="status-icon signal-icon">
+                    <div class="signal-bar"></div>
+                    <div class="signal-bar"></div>
+                    <div class="signal-bar"></div>
+                    <div class="signal-bar"></div>
+                </div>
+                <div class="status-icon wifi-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.07 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/>
+                    </svg>
+                </div>
+                <div class="status-icon battery-icon">
+                    <div class="battery-fill"></div>
+                    <div class="battery-tip"></div>
+                </div>
+            </div>
+        </div>
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <img src="logo.png" alt="SPEAKEE Logo">
+                </div>
+                <div class="logo-text">Speakee</div>
+            </div>
+            <div>
+
+                <div class="topic-name" id="currentTopic">Job Interview - Marketing Assistant</div>
+            </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="chat-area" id="chatArea">
+            <div class="message ai">
+                <div class="bubble ai">
+                    Hello! I'm your AI interviewer. Let's start with a simple question: Can you tell me a little about yourself?
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Controls -->
+        <div class="bottom-controls">
+            <!-- Idle State -->
+            <div class="idle-state" id="idleState">
+            <button class="mic-button" id="micButton" aria-label="Start recording">
+                <svg class="mic-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                </svg>
+            </button>
+            <button class="hint-button" id="hintButton" aria-label="Show hint">
+                <svg class="hint-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Speech bubble -->
+                    <rect x="2" y="2" width="10" height="8" rx="2" fill="#87CEEB" stroke="#5B8FA8" stroke-width="1.5"/>
+                    <path d="M6 10 L4 12 L6 12 Z" fill="#87CEEB" stroke="#5B8FA8" stroke-width="1.5" stroke-linejoin="round"/>
+                    <!-- Three lines in speech bubble -->
+                    <line x1="4" y1="5" x2="10" y2="5" stroke="#5B8FA8" stroke-width="1.2" stroke-linecap="round"/>
+                    <line x1="4" y1="7" x2="9" y2="7" stroke="#5B8FA8" stroke-width="1.2" stroke-linecap="round"/>
+                    <line x1="4" y1="9" x2="8" y2="9" stroke="#5B8FA8" stroke-width="1.2" stroke-linecap="round"/>
+                    <!-- Lightbulb -->
+                    <path d="M12 8 C14 8 16 9.5 16 12 C16 14.5 14.5 16.5 13 18 L13 20 C13 20.5 12.5 21 12 21 C11.5 21 11 20.5 11 20 L11 18 C9.5 16.5 8 14.5 8 12 C8 9.5 10 8 12 8 Z" fill="#FFD700" stroke="#8B6914" stroke-width="1.5" stroke-linejoin="round"/>
+                    <rect x="11" y="21" width="2" height="2" rx="0.5" fill="#8B6914"/>
+                </svg>
+            </button>
+            </div>
+
+            <!-- Recording State -->
+            <div class="recording-state" id="recordingState">
+                <div class="waveform-container" id="waveformContainer">
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                </div>
+                <div class="control-pill">
+                    <div class="control-group">
+                        <button class="control-button cancel-button" id="cancelButton" aria-label="Cancel recording">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                        <span class="control-label cancel-label">Cancel</span>
+                    </div>
+                    <div class="control-group">
+                    <button class="mic-button-recording" id="micButtonRecording" aria-label="Stop recording">
+                        <svg class="mic-icon-recording" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                        </svg>
+                    </button>
+                        <div class="timer" id="timer">0:00</div>
+                    </div>
+                    <div class="control-group">
+                        <button class="control-button send-button" id="sendButton" aria-label="Send recording">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                        <span class="control-label send-label">Send</span>
+                    </div>
+                </div>
+                <div class="listening-badge">
+                    <span class="dot"></span>
+                    Listening...
+                </div>
+                <button class="hint-button-recording" id="hintButtonRecording" aria-label="Show hint">
+                    <svg class="hint-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Speech bubble -->
+                        <rect x="2" y="2" width="10" height="8" rx="2" fill="#87CEEB" stroke="#5B8FA8" stroke-width="1.5"/>
+                        <path d="M6 10 L4 12 L6 12 Z" fill="#87CEEB" stroke="#5B8FA8" stroke-width="1.5" stroke-linejoin="round"/>
+                        <!-- Three lines in speech bubble -->
+                        <line x1="4" y1="5" x2="10" y2="5" stroke="#5B8FA8" stroke-width="1.2" stroke-linecap="round"/>
+                        <line x1="4" y1="7" x2="9" y2="7" stroke="#5B8FA8" stroke-width="1.2" stroke-linecap="round"/>
+                        <line x1="4" y1="9" x2="8" y2="9" stroke="#5B8FA8" stroke-width="1.2" stroke-linecap="round"/>
+                        <!-- Lightbulb -->
+                        <path d="M12 8 C14 8 16 9.5 16 12 C16 14.5 14.5 16.5 13 18 L13 20 C13 20.5 12.5 21 12 21 C11.5 21 11 20.5 11 20 L11 18 C9.5 16.5 8 14.5 8 12 C8 9.5 10 8 12 8 Z" fill="#FFD700" stroke="#8B6914" stroke-width="1.5" stroke-linejoin="round"/>
+                        <rect x="11" y="21" width="2" height="2" rx="0.5" fill="#8B6914"/>
+                    </svg>
+                </button>
+                <div class="hint-notification" id="hintNotification">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+                        <!-- Speech bubble -->
+                        <rect x="2" y="2" width="10" height="8" rx="2" fill="#87CEEB" stroke="#5B8FA8" stroke-width="1.5"/>
+                        <path d="M6 10 L4 12 L6 12 Z" fill="#87CEEB" stroke="#5B8FA8" stroke-width="1.5" stroke-linejoin="round"/>
+                        <!-- Three lines in speech bubble -->
+                        <line x1="4" y1="5" x2="10" y2="5" stroke="#5B8FA8" stroke-width="1.2" stroke-linecap="round"/>
+                        <line x1="4" y1="7" x2="9" y2="7" stroke="#5B8FA8" stroke-width="1.2" stroke-linecap="round"/>
+                        <line x1="4" y1="9" x2="8" y2="9" stroke="#5B8FA8" stroke-width="1.2" stroke-linecap="round"/>
+                        <!-- Lightbulb -->
+                        <path d="M12 8 C14 8 16 9.5 16 12 C16 14.5 14.5 16.5 13 18 L13 20 C13 20.5 12.5 21 12 21 C11.5 21 11 20.5 11 20 L11 18 C9.5 16.5 8 14.5 8 12 C8 9.5 10 8 12 8 Z" fill="#FFD700" stroke="#8B6914" stroke-width="1.5" stroke-linejoin="round"/>
+                        <rect x="11" y="21" width="2" height="2" rx="0.5" fill="#8B6914"/>
+                    </svg>
+                    Bạn có muốn xem gợi ý không?
+                </div>
+            </div>
+        </div>
+
+        <!-- Hint Popup -->
+        <div class="hint-popup" id="hintPopup">
+            <button class="close-hint" id="closeHint">×</button>
+            <h3>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
+                <!-- Speech bubble -->
+                <rect x="2" y="2" width="10" height="8" rx="2" fill="#87CEEB" stroke="#5B8FA8" stroke-width="1.5"/>
+                <path d="M6 10 L4 12 L6 12 Z" fill="#87CEEB" stroke="#5B8FA8" stroke-width="1.5" stroke-linejoin="round"/>
+                <!-- Three lines in speech bubble -->
+                <line x1="4" y1="5" x2="10" y2="5" stroke="#5B8FA8" stroke-width="1.2" stroke-linecap="round"/>
+                <line x1="4" y1="7" x2="9" y2="7" stroke="#5B8FA8" stroke-width="1.2" stroke-linecap="round"/>
+                <line x1="4" y1="9" x2="8" y2="9" stroke="#5B8FA8" stroke-width="1.2" stroke-linecap="round"/>
+                <!-- Lightbulb -->
+                <path d="M12 8 C14 8 16 9.5 16 12 C16 14.5 14.5 16.5 13 18 L13 20 C13 20.5 12.5 21 12 21 C11.5 21 11 20.5 11 20 L11 18 C9.5 16.5 8 14.5 8 12 C8 9.5 10 8 12 8 Z" fill="#FFD700" stroke="#8B6914" stroke-width="1.5" stroke-linejoin="round"/>
+                <rect x="11" y="21" width="2" height="2" rx="0.5" fill="#8B6914"/>
+            </svg>
+            Gợi ý trả lời
+        </h3>
+            <p><strong>Sample answer:</strong></p>
+            <p>"My name is [Your Name]. I'm currently a student at [University]. I'm interested in [Field] and I enjoy [Hobby]. I'm here today because I'm looking for opportunities to improve my English speaking skills."</p>
+            <p><strong>Key vocabulary:</strong></p>
+            <p>• Introduce yourself • Background • Interests • Goals</p>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        let isRecording = false;
+        let recordingStartTime = null;
+        let timerInterval = null;
+        let waveformInterval = null;
+        let silenceTimer = null;
+        let lastSoundTime = null;
+        const SILENCE_THRESHOLD = 5000; // 5 seconds
+
+        // DOM elements
+        const idleState = document.getElementById('idleState');
+        const recordingState = document.getElementById('recordingState');
+        const micButton = document.getElementById('micButton');
+        const hintButton = document.getElementById('hintButton');
+        const hintButtonRecording = document.getElementById('hintButtonRecording');
+        const hintNotification = document.getElementById('hintNotification');
+        const micButtonRecording = document.getElementById('micButtonRecording');
+        const cancelButton = document.getElementById('cancelButton');
+        const sendButton = document.getElementById('sendButton');
+        const timer = document.getElementById('timer');
+        const chatArea = document.getElementById('chatArea');
+        const hintPopup = document.getElementById('hintPopup');
+        const closeHint = document.getElementById('closeHint');
+        const waveformContainer = document.getElementById('waveformContainer');
+
+        // Start recording
+        function startRecording() {
+            if (isRecording) return;
+            
+            isRecording = true;
+            recordingStartTime = Date.now();
+            lastSoundTime = Date.now();
+            
+            // Switch to recording state
+            idleState.style.display = 'none';
+            recordingState.classList.add('active');
+            
+            // Start timer
+            timerInterval = setInterval(updateTimer, 100);
+            
+            // Animate waveform
+            animateWaveform();
+            
+            // Start silence detection
+            startSilenceDetection();
+            
+            // Start sound simulation for demo
+            startSoundSimulation();
+            
+            // Add recording message to chat
+            addRecordingMessage();
+        }
+
+        // Stop recording
+        function stopRecording() {
+            if (!isRecording) return;
+            
+            isRecording = false;
+            
+            // Clear intervals
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            if (waveformInterval) {
+                clearInterval(waveformInterval);
+                waveformInterval = null;
+            }
+            if (silenceTimer) {
+                clearInterval(silenceTimer);
+                silenceTimer = null;
+            }
+            
+            // Stop sound simulation
+            stopSoundSimulation();
+            
+            // Reset hint button
+            resetHintButton();
+            
+            // Switch to idle state
+            recordingState.classList.remove('active');
+            idleState.style.display = 'flex';
+            
+            // Reset timer
+            timer.textContent = '0:00';
+        }
+
+        // Cancel recording
+        function cancelRecording() {
+            stopRecording();
+            // Remove recording message if exists
+            const recordingMsg = document.querySelector('.bubble.recording');
+            if (recordingMsg) {
+                recordingMsg.closest('.message').remove();
+            }
+        }
+
+        // Send recording
+        function sendRecording() {
+            if (!isRecording) return;
+            
+            const duration = Math.floor((Date.now() - recordingStartTime) / 1000);
+            stopRecording();
+            
+            // Remove recording message
+            const recordingMsg = document.querySelector('.bubble.recording');
+            if (recordingMsg) {
+                recordingMsg.closest('.message').remove();
+            }
+            
+            // Add user message
+            addUserMessage("Recording sent (" + formatTime(duration) + ")");
+            
+            // Simulate AI response after delay
+            setTimeout(() => {
+                addAIMessage("Thank you for your answer! That's a great introduction. Now, can you tell me about your strengths and weaknesses?");
+            }, 1500);
+        }
+
+        // Update timer
+        function updateTimer() {
+            if (!recordingStartTime) return;
+            const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
+            timer.textContent = formatTime(elapsed);
+        }
+
+        // Format time (MM:SS)
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Animate waveform
+        function animateWaveform() {
+            const bars = waveformContainer.querySelectorAll('.waveform-bar');
+            waveformInterval = setInterval(() => {
+                bars.forEach((bar, index) => {
+                    // Create a more natural waveform pattern
+                    const baseHeight = 12;
+                    const variation = Math.random() * 40;
+                    const height = baseHeight + variation;
+                    bar.style.height = height + 'px';
+                    bar.style.opacity = 0.6 + (variation / 40) * 0.4;
+                });
+            }, 120);
+        }
+
+        // Start silence detection
+        function startSilenceDetection() {
+            silenceTimer = setInterval(() => {
+                if (!isRecording) return;
+                
+                const timeSinceLastSound = Date.now() - lastSoundTime;
+                
+                if (timeSinceLastSound >= SILENCE_THRESHOLD) {
+                    // User has been silent for 5 seconds
+                    activateHintButton();
+                } else {
+                    // User is speaking, reset hint button
+                    resetHintButton();
+                }
+            }, 500); // Check every 500ms
+        }
+
+        // Simulate sound detection (in real app, this would come from audio analysis)
+        function detectSound() {
+            if (isRecording) {
+                lastSoundTime = Date.now();
+            }
+        }
+
+        // Activate hint button when silent
+        function activateHintButton() {
+            hintButtonRecording.classList.add('active');
+            hintNotification.classList.add('show');
+        }
+
+        // Reset hint button
+        function resetHintButton() {
+            hintButtonRecording.classList.remove('active');
+            hintNotification.classList.remove('show');
+        }
+
+        // Add recording message
+        function addRecordingMessage() {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            messageDiv.innerHTML = `
+                <div class="bubble recording">
+                    <div class="waveform-mini">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
+                    <span>Recording...</span>
+                </div>
+            `;
+            chatArea.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // Add user message
+        function addUserMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            messageDiv.innerHTML = `<div class="bubble user">${text}</div>`;
+            chatArea.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // Add AI message
+        function addAIMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ai';
+            messageDiv.innerHTML = `<div class="bubble ai">${text}</div>`;
+            chatArea.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // Scroll to bottom
+        function scrollToBottom() {
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        // Show hint popup
+        function showHint() {
+            hintPopup.classList.add('show');
+        }
+
+        // Hide hint popup
+        function hideHint() {
+            hintPopup.classList.remove('show');
+        }
+
+        // Update status bar time
+        function updateStatusTime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const timeString = `${hours}:${minutes.toString().padStart(2, '0')}`;
+            const statusTime = document.getElementById('statusTime');
+            if (statusTime) {
+                statusTime.textContent = timeString;
+            }
+        }
+
+        // Update time every minute
+        setInterval(updateStatusTime, 60000);
+        updateStatusTime(); // Initial update
+
+        // Simulate random sound detection for demo
+        // In real app, this would be connected to actual audio analysis
+        // For demo: After 5 seconds of recording, stop simulating sound to trigger hint
+        let soundSimulationInterval = null;
+        
+        function startSoundSimulation() {
+            let simulationTime = 0;
+            soundSimulationInterval = setInterval(() => {
+                if (!isRecording) {
+                    clearInterval(soundSimulationInterval);
+                    return;
+                }
+                
+                simulationTime += 500;
+                
+                // Simulate speaking for first 4 seconds, then silence
+                if (simulationTime < 4000 && Math.random() > 0.2) {
+                    detectSound();
+                }
+                // After 5 seconds, stop detecting sound to trigger hint
+            }, 500);
+        }
+        
+        function stopSoundSimulation() {
+            if (soundSimulationInterval) {
+                clearInterval(soundSimulationInterval);
+                soundSimulationInterval = null;
+            }
+        }
+
+        // Event listeners
+        micButton.addEventListener('click', startRecording);
+        micButtonRecording.addEventListener('click', sendRecording);
+        cancelButton.addEventListener('click', cancelRecording);
+        sendButton.addEventListener('click', sendRecording);
+        hintButton.addEventListener('click', showHint);
+        hintButtonRecording.addEventListener('click', () => {
+            showHint();
+            resetHintButton();
+        });
+        closeHint.addEventListener('click', hideHint);
+
+        // Close hint when clicking outside
+        hintPopup.addEventListener('click', (e) => {
+            if (e.target === hintPopup) {
+                hideHint();
+            }
+        });
+
+        // Prevent multiple rapid clicks
+        let isProcessing = false;
+        [micButton, micButtonRecording, cancelButton, sendButton].forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if (isProcessing) {
+                    e.preventDefault();
+                    return;
+                }
+                isProcessing = true;
+                setTimeout(() => {
+                    isProcessing = false;
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>

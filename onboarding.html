@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>SPEAKEE - Thiết Lập Hồ Sơ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Paytone+One&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            background: linear-gradient(to bottom, #ffffff 0%, #f8fafc 100%);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        /* Header */
+        .header-top {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 10;
+        }
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .logo-text {
+            font-family: 'Paytone One', sans-serif;
+            font-size: 32px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffd93d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 32px;
+            padding-top: 60px;
+        }
+        .page-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        .page-subtitle {
+            font-size: 18px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        /* Avatar Section */
+        .avatar-section {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .avatar-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+        .avatar-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #e2e8f0;
+            object-fit: cover;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .avatar-preview:hover {
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .avatar-upload {
+            display: none;
+        }
+        .avatar-label {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            border-radius: 10px;
+            color: #475569;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .avatar-label:hover {
+            background: #e2e8f0;
+            border-color: #94a3b8;
+        }
+        .avatar-remove {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #fee2e2;
+            color: #ef4444;
+            border: 2px solid white;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s ease;
+        }
+        .avatar-wrapper.has-avatar .avatar-remove {
+            display: flex;
+        }
+        .avatar-remove:hover {
+            background: #fecaca;
+            transform: scale(1.1);
+        }
+
+        /* Form Section */
+        .form-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+        .form-label {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .form-label .required {
+            color: #ef4444;
+            margin-left: 4px;
+        }
+        .form-label .optional {
+            color: #94a3b8;
+            font-weight: 500;
+            font-size: 14px;
+            margin-left: 4px;
+        }
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background: white;
+            font-family: inherit;
+        }
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        .form-input:disabled {
+            background: #f1f5f9;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+
+        /* Checkbox/Radio Groups */
+        .checkbox-group,
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .checkbox-item,
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .checkbox-item:hover,
+        .radio-item:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+        .checkbox-item input[type="checkbox"],
+        .radio-item input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+        .checkbox-item input[type="checkbox"]:checked + label,
+        .radio-item input[type="radio"]:checked + label {
+            color: #667eea;
+            font-weight: 600;
+        }
+        .checkbox-item:has(input[type="checkbox"]:checked),
+        .radio-item:has(input[type="radio"]:checked) {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-color: #667eea;
+        }
+        .checkbox-item label,
+        .radio-item label {
+            cursor: pointer;
+            font-size: 14px;
+            color: #475569;
+            user-select: none;
+        }
+
+        /* Actions */
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 32px;
+        }
+        .btn {
+            padding: 14px 28px;
+            border-radius: 14px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .btn.secondary {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        .btn.secondary:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+        .btn.primary {
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffd93d 100%);
+            color: #fff;
+        }
+        .btn.primary:hover {
+            box-shadow: 0 8px 24px rgba(255, 107, 157, 0.4);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+            .container {
+                padding: 24px;
+                border-radius: 20px;
+            }
+            .header-top {
+                top: 16px;
+                left: 16px;
+            }
+            .page-header {
+                padding-top: 50px;
+            }
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+            }
+            .logo-text {
+                font-size: 28px;
+            }
+            .page-title {
+                font-size: 24px;
+            }
+            .form-card {
+                padding: 24px;
+            }
+            .form-actions {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+            }
+            .checkbox-group,
+            .radio-group {
+                flex-direction: column;
+            }
+            .checkbox-item,
+            .radio-item {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header-top">
+            <div class="logo-icon">
+                <img src="logo.png" alt="SPEAKEE Logo">
+            </div>
+            <div class="logo-text">Speakee</div>
+        </div>
+
+        <div class="page-header">
+            <div class="page-title">Chào mừng đến với SPEAKEE! 👋</div>
+            <div class="page-subtitle">Cập nhật thông tin của bạn</div>
+        </div>
+
+        <div class="progress-indicator">
+            Bước 1/1 - Thiết lập hồ sơ
+        </div>
+
+        <!-- Avatar Section -->
+        <div class="avatar-section">
+            <div class="avatar-wrapper" id="avatarWrapper">
+                <div class="avatar-preview" id="avatarPreview">
+                    <span>👤</span>
+                </div>
+                <div class="avatar-remove" id="avatarRemove" onclick="removeAvatar()">×</div>
+                <input type="file" id="avatarUpload" class="avatar-upload" accept="image/*" onchange="handleAvatarUpload(event)">
+            </div>
+            <label for="avatarUpload" class="avatar-label">Tải ảnh đại diện</label>
+        </div>
+
+        <!-- Form Section -->
+        <div class="form-card">
+            <form id="profileForm">
+                <!-- Full Name -->
+                <div class="form-group">
+                    <label class="form-label" for="fullName">
+                        Họ và tên
+                        <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="fullName" 
+                        class="form-input" 
+                        placeholder="Nhập họ và tên của bạn"
+                        required
+                    >
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label class="form-label" for="email">
+                        Email
+                        <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        class="form-input" 
+                        placeholder="example@email.com"
+                        required
+                    >
+                </div>
+
+                <!-- Phone -->
+                <div class="form-group">
+                    <label class="form-label" for="phone">
+                        Số điện thoại
+                        <span class="optional">(Tùy chọn)</span>
+                    </label>
+                    <input 
+                        type="tel" 
+                        id="phone" 
+                        class="form-input" 
+                        placeholder="0123456789"
+                    >
+                </div>
+
+                <!-- Native Language -->
+                <div class="form-group">
+                    <label class="form-label" for="nativeLanguage">
+                        Ngôn ngữ mẹ đẻ
+                        <span class="required">*</span>
+                    </label>
+                    <select id="nativeLanguage" class="form-select" required>
+                        <option value="">Chọn ngôn ngữ</option>
+                        <option value="vi">Tiếng Việt</option>
+                        <option value="en">English</option>
+                        <option value="zh">中文</option>
+                        <option value="ja">日本語</option>
+                        <option value="ko">한국어</option>
+                        <option value="th">ไทย</option>
+                        <option value="other">Khác</option>
+                    </select>
+                </div>
+
+                <!-- English Level -->
+                <div class="form-group">
+                    <label class="form-label">
+                        Trình độ tiếng Anh hiện tại
+                        <span class="required">*</span>
+                    </label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="levelA1" name="englishLevel" value="A1" required>
+                            <label for="levelA1">A1 - Beginner</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="levelA2" name="englishLevel" value="A2" required>
+                            <label for="levelA2">A2 - Elementary</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="levelB1" name="englishLevel" value="B1" required>
+                            <label for="levelB1">B1 - Intermediate</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="levelB2" name="englishLevel" value="B2" required>
+                            <label for="levelB2">B2 - Upper Intermediate</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="levelC1" name="englishLevel" value="C1" required>
+                            <label for="levelC1">C1 - Advanced</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="levelC2" name="englishLevel" value="C2" required>
+                            <label for="levelC2">C2 - Proficient</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learning Goals -->
+                <div class="form-group">
+                    <label class="form-label">
+                        Mục tiêu học tập
+                        <span class="required">*</span>
+                    </label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="goalJob" name="learningGoals" value="job">
+                            <label for="goalJob">Phỏng vấn xin việc</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="goalPresentation" name="learningGoals" value="presentation">
+                            <label for="goalPresentation">Thuyết trình</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="goalMeeting" name="learningGoals" value="meeting">
+                            <label for="goalMeeting">Họp nhóm</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="goalNegotiation" name="learningGoals" value="negotiation">
+                            <label for="goalNegotiation">Thương lượng</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="goalDaily" name="learningGoals" value="daily">
+                            <label for="goalDaily">Giao tiếp hàng ngày</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="goalAcademic" name="learningGoals" value="academic">
+                            <label for="goalAcademic">Học thuật</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Field of Interest -->
+                <div class="form-group">
+                    <label class="form-label" for="fieldOfInterest">
+                        Chuyên ngành / Lĩnh vực quan tâm
+                        <span class="optional">(Tùy chọn)</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="fieldOfInterest" 
+                        class="form-input" 
+                        placeholder="Ví dụ: Marketing, IT, Kinh doanh, Giáo dục..."
+                    >
+                </div>
+            </form>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button type="button" class="btn secondary" onclick="skipOnboarding()">Bỏ qua</button>
+            <button type="submit" class="btn primary" form="profileForm">Lưu thông tin</button>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const profileForm = document.getElementById('profileForm');
+        const avatarUpload = document.getElementById('avatarUpload');
+        const avatarPreview = document.getElementById('avatarPreview');
+        const avatarWrapper = document.getElementById('avatarWrapper');
+        const avatarRemove = document.getElementById('avatarRemove');
+
+        // Handle avatar upload
+        function handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Kích thước ảnh không được vượt quá 5MB');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    avatarPreview.innerHTML = `<img src="${e.target.result}" alt="Avatar">`;
+                    avatarWrapper.classList.add('has-avatar');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Remove avatar
+        function removeAvatar() {
+            avatarPreview.innerHTML = '<span>👤</span>';
+            avatarWrapper.classList.remove('has-avatar');
+            avatarUpload.value = '';
+        }
+
+        // Click avatar to upload
+        avatarPreview.addEventListener('click', () => {
+            avatarUpload.click();
+        });
+
+        // Form submission
+        profileForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Get form data
+            const formData = {
+                fullName: document.getElementById('fullName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                nativeLanguage: document.getElementById('nativeLanguage').value,
+                englishLevel: document.querySelector('input[name="englishLevel"]:checked')?.value,
+                learningGoals: Array.from(document.querySelectorAll('input[name="learningGoals"]:checked')).map(cb => cb.value),
+                fieldOfInterest: document.getElementById('fieldOfInterest').value.trim(),
+                avatar: avatarPreview.querySelector('img')?.src || null
+            };
+
+            // Validate
+            if (!formData.fullName || !formData.email || !formData.nativeLanguage || !formData.englishLevel) {
+                alert('Vui lòng điền đầy đủ các trường bắt buộc (*)');
+                return;
+            }
+
+            if (formData.learningGoals.length === 0) {
+                alert('Vui lòng chọn ít nhất một mục tiêu học tập');
+                return;
+            }
+
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(formData.email)) {
+                alert('Email không hợp lệ');
+                return;
+            }
+
+            // Simulate API call
+            console.log('Saving profile:', formData);
+
+            // Save to localStorage
+            localStorage.setItem('userProfile', JSON.stringify(formData));
+            localStorage.setItem('onboardingCompleted', 'true');
+
+            // Redirect to main page
+            alert('Thông tin đã được lưu thành công!');
+            window.location.href = 'scenario-builder.html';
+        });
+
+        // Skip onboarding
+        function skipOnboarding() {
+            if (confirm('Bạn có chắc chắn muốn bỏ qua? Bạn có thể cập nhật thông tin sau.')) {
+                localStorage.setItem('onboardingCompleted', 'true');
+                window.location.href = 'scenario-builder.html';
+            }
+        }
+
+        // Load existing data if available (from login)
+        window.addEventListener('DOMContentLoaded', () => {
+            // Check if user is logged in (from localStorage or session)
+            const userEmail = sessionStorage.getItem('userEmail') || localStorage.getItem('userEmail');
+            if (userEmail) {
+                document.getElementById('email').value = userEmail;
+                document.getElementById('email').disabled = true;
+            }
+
+            // Load saved profile if exists
+            const savedProfile = localStorage.getItem('userProfile');
+            if (savedProfile) {
+                try {
+                    const profile = JSON.parse(savedProfile);
+                    if (profile.fullName) document.getElementById('fullName').value = profile.fullName;
+                    if (profile.phone) document.getElementById('phone').value = profile.phone;
+                    if (profile.nativeLanguage) document.getElementById('nativeLanguage').value = profile.nativeLanguage;
+                    if (profile.englishLevel) {
+                        document.querySelector(`input[name="englishLevel"][value="${profile.englishLevel}"]`).checked = true;
+                    }
+                    if (profile.learningGoals) {
+                        profile.learningGoals.forEach(goal => {
+                            const checkbox = document.querySelector(`input[name="learningGoals"][value="${goal}"]`);
+                            if (checkbox) checkbox.checked = true;
+                        });
+                    }
+                    if (profile.fieldOfInterest) document.getElementById('fieldOfInterest').value = profile.fieldOfInterest;
+                    if (profile.avatar) {
+                        avatarPreview.innerHTML = `<img src="${profile.avatar}" alt="Avatar">`;
+                        avatarWrapper.classList.add('has-avatar');
+                    }
+                } catch (e) {
+                    console.error('Error loading profile:', e);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+

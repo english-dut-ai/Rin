@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>SPEAKEE - Feedback Summary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Paytone+One&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            /* background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); */
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 80%;
+            max-width: none;
+            background: linear-gradient(to bottom, #ffffff 0%, #f8fafc 100%);
+            border-radius: 0;
+            padding: 40px;
+            box-shadow: none;
+            position: relative;
+            min-height: calc(100vh - 48px);
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 60px;
+        }
+        .header-top {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 10;
+        }
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .logo-text {
+            font-family: 'Paytone One', sans-serif;
+            font-size: 32px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffd93d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .feedback-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .feedback-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffd93d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+        }
+        .feedback-subtitle {
+            font-size: 18px;
+            color: #64748b;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+
+        /* Feedback Cards */
+        .feedback-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .feedback-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        .feedback-metric-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .feedback-metric-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e293b;
+            letter-spacing: 0.3px;
+        }
+        .feedback-score {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1e293b;
+            font-variant-numeric: tabular-nums;
+        }
+        .feedback-score.good { color: #10b981; }
+        .feedback-score.warn { color: #f59e0b; }
+        .feedback-score.bad { color: #ef4444; }
+        .feedback-subtitle-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 16px;
+        }
+        .feedback-progress {
+            width: 100%;
+            height: 14px;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .feedback-progress-bar {
+            height: 100%;
+            border-radius: 999px;
+            transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+        .feedback-progress-bar.good {
+            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+        }
+        .feedback-progress-bar.warn {
+            background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
+        }
+        .feedback-progress-bar.bad {
+            background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+        }
+        .feedback-detail {
+            font-size: 15px;
+            color: #475569;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+        .feedback-detail strong {
+            color: #1e293b;
+            font-weight: 700;
+        }
+        .feedback-detail i {
+            color: #64748b;
+            font-style: italic;
+            background: rgba(100, 116, 139, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .pronunciation-word {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 4px 8px 4px 0;
+            padding: 6px 12px;
+            background: rgba(100, 116, 139, 0.1);
+            border-radius: 8px;
+            vertical-align: middle;
+        }
+        .pronunciation-word-text {
+            font-style: italic;
+            color: #64748b;
+            font-weight: 600;
+        }
+        .pronunciation-ipa {
+            color: #475569;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .pronunciation-speaker {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+        .pronunciation-speaker:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .pronunciation-speaker:active {
+            transform: scale(0.95);
+        }
+        .pronunciation-speaker.playing {
+            animation: pulse 1s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.15);
+            }
+        }
+        .feedback-tip {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-left: 4px solid #667eea;
+            padding: 16px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #1e40af;
+            line-height: 1.7;
+        }
+        .feedback-tip strong {
+            color: #1e40af;
+            font-weight: 700;
+        }
+
+        /* Encouragement */
+        .feedback-encouragement {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid rgba(16, 185, 129, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 32px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.1);
+        }
+        .feedback-encouragement-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #059669;
+            line-height: 1.7;
+        }
+
+        /* Actions */
+        .feedback-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 32px;
+        }
+        .btn {
+            padding: 14px 28px;
+            border-radius: 14px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .btn.secondary {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        .btn.secondary:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+        .btn.primary {
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffd93d 100%);
+            color: #fff;
+        }
+        .btn.primary:hover {
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Fullscreen toggle */
+        .fullscreen-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 1000;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #334155;
+            font-size: 18px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            backdrop-filter: saturate(180%) blur(8px);
+        }
+        .fullscreen-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        .fullscreen-toggle:active {
+            transform: translateY(0);
+        }
+        .fullscreen-toggle[aria-pressed="true"] {
+            background: rgba(30, 41, 59, 0.9);
+            color: #fff;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+            .container {
+                padding: 24px;
+                border-radius: 20px;
+            }
+            .header-top {
+                top: 16px;
+                left: 16px;
+            }
+            .header {
+                padding-top: 50px;
+            }
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+            }
+            .logo-text {
+                font-size: 28px;
+            }
+            .feedback-title {
+                font-size: 24px;
+            }
+            .feedback-card {
+                padding: 20px;
+            }
+            .feedback-metric-name {
+                font-size: 20px;
+            }
+            .feedback-score {
+                font-size: 24px;
+            }
+            .feedback-actions {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-top">
+                <div class="logo-icon">
+                    <img src="logo.png" alt="SPEAKEE Logo">
+                </div>
+                <div class="logo-text">Speakee</div>
+            </div>
+            <div class="feedback-title">
+                <div class="feedback-icon">📊</div>
+                <span>Feedback Summary</span>
+            </div>
+            <div class="feedback-subtitle">Chúc mừng bạn đã hoàn thành cuộc phỏng vấn!</div>
+        </div>
+
+        <!-- Fluency -->
+        <div class="feedback-card" data-score="80">
+            <div class="feedback-metric-header">
+                <div class="feedback-metric-name">Fluency</div>
+                <div class="feedback-score good" id="fluencyScore">80%</div>
+            </div>
+            <div class="feedback-progress">
+                <div class="feedback-progress-bar good" id="fluencyBar" style="width: 0%;"></div>
+            </div>
+            <div class="feedback-detail">
+                <strong>Chi tiết:</strong> Tốc độ nói vừa phải, ít ngập ngừng (độ ngắt nghỉ trung bình ~3s).
+            </div>
+            <div class="feedback-tip">
+                <strong>Gợi ý cải thiện:</strong> Thử kể chuyện dài hơn để duy trì mạch nói ổn định hơn.
+            </div>
+        </div>
+
+        <!-- Pronunciation -->
+        <div class="feedback-card" data-score="75">
+            <div class="feedback-metric-header">
+                <div class="feedback-metric-name">Pronunciation</div>
+                <div class="feedback-score warn" id="pronunciationScore">75%</div>
+            </div>
+            <div class="feedback-progress">
+                <div class="feedback-progress-bar warn" id="pronunciationBar" style="width: 0%;"></div>
+            </div>
+            <div class="feedback-detail">
+                <strong>Chi tiết:</strong> Phát âm tốt, sai một số từ: 
+                <br>
+                <span class="pronunciation-word">
+                    <span class="pronunciation-word-text">example</span>
+                    <span class="pronunciation-ipa">/ɪɡˈzæmpəl/</span>
+                    <button class="pronunciation-speaker" onclick="pronounceWord('example', this)" title="Phát âm">🔊</button>
+                </span>
+                <span class="pronunciation-word">
+                    <span class="pronunciation-word-text">comfortable</span>
+                    <span class="pronunciation-ipa">/ˈkʌmftəbəl/</span>
+                    <button class="pronunciation-speaker" onclick="pronounceWord('comfortable', this)" title="Phát âm">🔊</button>
+                </span>
+            </div>
+            <div class="feedback-tip">
+                <strong>Gợi ý cải thiện:</strong> Nghe lại  mẫu Cambridge và luyện shadowing 1–2 phút mỗi ngày.
+            </div>
+        </div>
+
+        <!-- Accuracy -->
+        <div class="feedback-card" data-score="70">
+            <div class="feedback-metric-header">
+                <div class="feedback-metric-name">Accuracy</div>
+                <div class="feedback-score warn" id="accuracyScore">70%</div>
+            </div>
+            <div class="feedback-progress">
+                <div class="feedback-progress-bar warn" id="accuracyBar" style="width: 0%;"></div>
+            </div>
+            <div class="feedback-detail">
+                <strong>Chi tiết:</strong> <i>I can <span style = "color: red;"> used  </span> it</i> → <i>I can <span style="color: green;">use  </span> it</i>.
+            </div>
+            <div class="feedback-tip">
+                <strong>Gợi ý cải thiện:</strong> Ôn lại cách chia động từ sau modal verbs và luyện nói trong ngữ cảnh.
+            </div>
+        </div>
+
+
+
+        <!-- Encouragement -->
+        <div class="feedback-encouragement">
+            <div class="feedback-encouragement-text">
+                Bạn đã làm tốt rồi! Tiếp tục luyện tập để cải thiện kỹ năng nói tiếng Anh của mình nhé! 💪
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="feedback-actions">
+            <button class="btn secondary" onclick="window.location.href='speakee-voice-interface.html'">Quay lại</button>
+            <button class="btn primary" onclick="window.location.href='speakee-voice-interface.html'">Thử lại</button>
+        </div>
+    </div>  
+
+    <!-- Fullscreen button -->
+    <button id="fullscreenBtn" class="fullscreen-toggle" aria-label="Toàn màn hình" aria-pressed="false" title="Mở toàn màn hình (F11 cũng được)">⛶</button>
+
+    <script>
+        // Pronunciation function using Web Speech API
+        function pronounceWord(word, button) {
+            if (!('speechSynthesis' in window)) {
+                alert('Trình duyệt của bạn không hỗ trợ phát âm thanh');
+                return;
+            }
+
+            // Stop any ongoing speech
+            window.speechSynthesis.cancel();
+
+            // Add playing animation
+            button.classList.add('playing');
+            button.disabled = true;
+
+            // Create speech utterance
+            const utterance = new SpeechSynthesisUtterance(word);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.8; // Slightly slower for clarity
+            utterance.pitch = 1;
+            utterance.volume = 1;
+
+            // Remove animation when speech ends
+            utterance.onend = () => {
+                button.classList.remove('playing');
+                button.disabled = false;
+            };
+
+            // Handle errors
+            utterance.onerror = () => {
+                button.classList.remove('playing');
+                button.disabled = false;
+                alert('Không thể phát âm từ này');
+            };
+
+            // Speak
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Animate progress bars on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const cards = document.querySelectorAll('.feedback-card');
+                cards.forEach((card, index) => {
+                    const score = parseInt(card.dataset.score || 0);
+                    const bar = card.querySelector('.feedback-progress-bar');
+                    const scoreEl = card.querySelector('.feedback-score');
+                    
+                    // Update score color based on value
+                    if (scoreEl) {
+                        scoreEl.classList.remove('good', 'warn', 'bad');
+                        if (score >= 80) scoreEl.classList.add('good');
+                        else if (score >= 60) scoreEl.classList.add('warn');
+                        else scoreEl.classList.add('bad');
+                    }
+                    
+                    // Update bar color
+                    if (bar) {
+                        bar.classList.remove('good', 'warn', 'bad');
+                        if (score >= 80) bar.classList.add('good');
+                        else if (score >= 60) bar.classList.add('warn');
+                        else bar.classList.add('bad');
+                        
+                        // Animate width
+                        setTimeout(() => {
+                            if (bar) bar.style.width = score + '%';
+                        }, index * 200);
+                    }
+                });
+            }, 300);
+        });
+
+        // Fullscreen helpers
+        function isFullscreen() {
+            return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+        }
+
+        function requestFs(element) {
+            if (element.requestFullscreen) return element.requestFullscreen();
+            if (element.webkitRequestFullscreen) return element.webkitRequestFullscreen();
+            if (element.mozRequestFullScreen) return element.mozRequestFullScreen();
+            if (element.msRequestFullscreen) return element.msRequestFullscreen();
+        }
+
+        function exitFs() {
+            if (document.exitFullscreen) return document.exitFullscreen();
+            if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
+            if (document.mozCancelFullScreen) return document.mozCancelFullScreen();
+            if (document.msExitFullscreen) return document.msExitFullscreen();
+        }
+
+        function updateFsButtonState() {
+            const btn = document.getElementById('fullscreenBtn');
+            const active = isFullscreen();
+            if (!btn) return;
+            btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+            btn.title = active ? 'Thoát toàn màn hình' : 'Mở toàn màn hình (F11 cũng được)';
+            // Toggle icon between expand ⛶ and collapse ✕
+            btn.textContent = active ? '✕' : '⛶';
+        }
+
+        // Attach events
+        (function initFullscreenToggle() {
+            const btn = document.getElementById('fullscreenBtn');
+            if (!btn) return;
+            btn.addEventListener('click', function () {
+                if (isFullscreen()) {
+                    exitFs();
+                } else {
+                    requestFs(document.documentElement);
+                }
+            });
+
+            document.addEventListener('fullscreenchange', updateFsButtonState);
+            document.addEventListener('webkitfullscreenchange', updateFsButtonState);
+            document.addEventListener('mozfullscreenchange', updateFsButtonState);
+            document.addEventListener('MSFullscreenChange', updateFsButtonState);
+
+            updateFsButtonState();
+        })();
+    </script>
+</body>
+</html>
+

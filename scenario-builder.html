@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>SPEAKEE - Tạo Tình Huống</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Paytone+One&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            background: linear-gradient(to bottom, #ffffff 0%, #f8fafc 100%);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        /* Header */
+        .header-top {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 10;
+        }
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .logo-text {
+            font-family: 'Paytone One', sans-serif;
+            font-size: 32px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffd93d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 60px;
+        }
+        .page-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        .page-subtitle {
+            font-size: 18px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        /* Search Section */
+        .search-section {
+            margin-bottom: 40px;
+        }
+        .search-label {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .search-wrapper {
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            font-size: 16px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background: white;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        .search-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-top: none;
+            border-radius: 0 0 14px 14px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        .search-dropdown.show {
+            display: block;
+        }
+        .search-option {
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .search-option:hover {
+            background: #f8fafc;
+        }
+        .search-option:last-child {
+            border-bottom: none;
+        }
+        .search-option.create-new {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            font-weight: 600;
+            color: #1e40af;
+        }
+        .search-option.create-new:hover {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        }
+
+        /* Form Section */
+        .form-section {
+            display: none;
+        }
+        .form-section.show {
+            display: block;
+        }
+        .form-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        .form-label {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .form-label .required {
+            color: #ef4444;
+            margin-left: 4px;
+        }
+        .form-label .hint {
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+            margin-top: 4px;
+        }
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background: white;
+            font-family: inherit;
+        }
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .suggestions {
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .suggestion-tag {
+            padding: 6px 12px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .suggestion-tag:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+        }
+        .suggestion-tag.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Checklist Section */
+        .checklist-group {
+            margin-bottom: 24px;
+        }
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        .checklist-item input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+        }
+        .checklist-item input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .checklist-item .remove-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: #fee2e2;
+            color: #ef4444;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s ease;
+        }
+        .checklist-item .remove-btn:hover {
+            background: #fecaca;
+            transform: scale(1.05);
+        }
+        .add-checklist-btn {
+            padding: 10px 16px;
+            background: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            border-radius: 10px;
+            color: #475569;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .add-checklist-btn:hover {
+            background: #e2e8f0;
+            border-color: #94a3b8;
+        }
+        .add-checklist-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Actions */
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 32px;
+        }
+        .btn {
+            padding: 14px 28px;
+            border-radius: 14px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .btn.secondary {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        .btn.secondary:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+        .btn.primary {
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffd93d 100%);
+            color: #fff;
+        }
+        .btn.primary:hover {
+            box-shadow: 0 8px 24px rgba(255, 107, 157, 0.4);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid rgba(16, 185, 129, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .success-message.show {
+            display: block;
+        }
+        .success-message-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #059669;
+            margin-bottom: 16px;
+        }
+        .success-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+            .container {
+                padding: 24px;
+                border-radius: 20px;
+            }
+            .header-top {
+                top: 16px;
+                left: 16px;
+            }
+            .page-header {
+                padding-top: 50px;
+            }
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+            }
+            .logo-text {
+                font-size: 28px;
+            }
+            .page-title {
+                font-size: 24px;
+            }
+            .form-card {
+                padding: 24px;
+            }
+            .form-actions {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header-top">
+            <div class="logo-icon">
+                <img src="logo.png" alt="SPEAKEE Logo">
+            </div>
+            <div class="logo-text">Speakee</div>
+        </div>
+
+        <div class="page-header">
+            <div class="page-title">Tạo Tình Huống Luyện Tập</div>
+            <div class="page-subtitle">Tìm kiếm hoặc tạo mới tình huống thực tế của bạn</div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <label class="search-label" for="scenarioSearch">Tìm kiếm tình huống</label>
+            <div class="search-wrapper">
+                <input 
+                    type="text" 
+                    id="scenarioSearch" 
+                    class="search-input" 
+                    placeholder="Nhập tên tình huống hoặc chọn từ danh sách..."
+                    autocomplete="off"
+                >
+                <div class="search-dropdown" id="searchDropdown"></div>
+            </div>
+        </div>
+
+        <!-- Success Message -->
+        <div class="success-message" id="successMessage">
+            <div class="success-message-text">✅ Tình huống đã được tạo thành công!</div>
+            <div class="success-actions">
+                <button class="btn secondary" onclick="resetForm()">Tạo mới</button>
+                <button class="btn primary" onclick="startPractice()">Bắt đầu luyện tập</button>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div class="form-section" id="formSection">
+            <div class="form-card">
+                <form id="scenarioForm">
+                    <!-- Title Scenario -->
+                    <div class="form-group">
+                        <label class="form-label" for="titleScenario">
+                            Thể loại (Title scenario)
+                            <span class="required">*</span>
+                        </label>
+                        <div class="hint">Gợi ý: Thuyết trình, Trao đổi, Báo cáo, Thương lượng, Phỏng vấn...</div>
+                        <input 
+                            type="text" 
+                            id="titleScenario" 
+                            class="form-input" 
+                            placeholder="Ví dụ: Thuyết trình dự án marketing"
+                            required
+                        >
+                        <div class="suggestions" id="titleSuggestions">
+                            <span class="suggestion-tag" data-value="Thuyết trình">Thuyết trình</span>
+                            <span class="suggestion-tag" data-value="Trao đổi">Trao đổi</span>
+                            <span class="suggestion-tag" data-value="Báo cáo">Báo cáo</span>
+                            <span class="suggestion-tag" data-value="Thương lượng">Thương lượng</span>
+                            <span class="suggestion-tag" data-value="Phỏng vấn">Phỏng vấn</span>
+                            <span class="suggestion-tag" data-value="Họp nhóm">Họp nhóm</span>
+                            <span class="suggestion-tag" data-value="Đàm phán">Đàm phán</span>
+                        </div>
+                    </div>
+
+                    <!-- AI Role -->
+                    <div class="form-group">
+                        <label class="form-label" for="aiRole">
+                            AI - role
+                            <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="aiRole" 
+                            class="form-input" 
+                            placeholder="Ví dụ: Giám đốc Marketing, Giảng viên, Khách hàng..."
+                            required
+                        >
+                    </div>
+
+                    <!-- User Role -->
+                    <div class="form-group">
+                        <label class="form-label" for="userRole">
+                            User - role
+                            <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="userRole" 
+                            class="form-input" 
+                            placeholder="Ví dụ: Nhân viên Marketing, Sinh viên, Nhà cung cấp..."
+                            required
+                        >
+                    </div>
+
+                    <!-- Extra Information -->
+                    <div class="form-group">
+                        <label class="form-label" for="extraInfo">
+                            Extra information (Thông tin ngữ cảnh thêm)
+                        </label>
+                        <textarea 
+                            id="extraInfo" 
+                            class="form-textarea" 
+                            placeholder="Ví dụ: Ngày mai em cần thuyết trình dự án marketing cho Vinamilk. Dự án này về chiến dịch quảng cáo sản phẩm sữa mới..."
+                        ></textarea>
+                    </div>
+
+                    <!-- Checklist Expectation -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Checklist Expectation
+                        </label>
+                        <div class="checklist-group" id="checklistGroup">
+                            <div class="checklist-item">
+                                <input type="text" placeholder="Ví dụ: Giới thiệu rõ ràng về dự án" required>
+                                <button type="button" class="remove-btn" onclick="removeChecklistItem(this)" style="display: none;">×</button>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="text" placeholder="Ví dụ: Trình bày timeline và budget" required>
+                                <button type="button" class="remove-btn" onclick="removeChecklistItem(this)" style="display: none;">×</button>
+                            </div>
+                        </div>
+                        <button type="button" class="add-checklist-btn" id="addChecklistBtn" onclick="addChecklistItem()">
+                            <span>+</span> Thêm checklist
+                        </button>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <button type="button" class="btn secondary" onclick="resetForm()">Hủy</button>
+                        <button type="submit" class="btn primary">Tạo tình huống</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Predefined scenarios
+        const predefinedScenarios = [
+            { title: 'Job Interview - Marketing Assistant', link: 'speakee-interview-web.html' },
+            { title: 'Job Interview - Software Engineer', link: 'speakee-interview-web.html' },
+            { title: 'Job Interview - Sales Manager', link: 'speakee-interview-web.html' },
+            { title: 'Thuyết trình dự án', link: 'speakee-interview-web.html' },
+            { title: 'Trao đổi với khách hàng', link: 'speakee-interview-web.html' },
+            { title: 'Báo cáo tiến độ công việc', link: 'speakee-interview-web.html' },
+            { title: 'Thương lượng hợp đồng', link: 'speakee-interview-web.html' },
+            { title: 'Họp nhóm dự án', link: 'speakee-interview-web.html' },
+        ];
+
+        // DOM elements
+        const searchInput = document.getElementById('scenarioSearch');
+        const searchDropdown = document.getElementById('searchDropdown');
+        const formSection = document.getElementById('formSection');
+        const successMessage = document.getElementById('successMessage');
+        const scenarioForm = document.getElementById('scenarioForm');
+        const titleSuggestions = document.querySelectorAll('.suggestion-tag');
+        const checklistGroup = document.getElementById('checklistGroup');
+        const addChecklistBtn = document.getElementById('addChecklistBtn');
+
+        // Show default options (first 5)
+        function showDefaultOptions() {
+            const defaultScenarios = predefinedScenarios.slice(0, 5);
+            let html = '';
+            defaultScenarios.forEach(scenario => {
+                html += `<div class="search-option" onclick="selectScenario('${scenario.link}')">${scenario.title}</div>`;
+            });
+            html += `<div class="search-option create-new" onclick="createNewScenario()">+ Tạo tình huống mới</div>`;
+            searchDropdown.innerHTML = html;
+            searchDropdown.classList.add('show');
+        }
+
+        // Show dropdown on focus
+        searchInput.addEventListener('focus', () => {
+            const query = searchInput.value.trim();
+            if (query.length === 0) {
+                showDefaultOptions();
+            } else {
+                updateSearchResults(query);
+            }
+        });
+
+        // Search functionality
+        function updateSearchResults(query) {
+            if (query.length === 0) {
+                showDefaultOptions();
+                return;
+            }
+
+            const matches = predefinedScenarios.filter(scenario => 
+                scenario.title.toLowerCase().includes(query.toLowerCase())
+            );
+
+            let html = '';
+            if (matches.length > 0) {
+                matches.forEach(scenario => {
+                    html += `<div class="search-option" onclick="selectScenario('${scenario.link}')">${scenario.title}</div>`;
+                });
+            }
+            html += `<div class="search-option create-new" onclick="createNewScenario()">+ Tạo mới: "${query}"</div>`;
+            searchDropdown.innerHTML = html;
+            searchDropdown.classList.add('show');
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            updateSearchResults(e.target.value.trim());
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+                searchDropdown.classList.remove('show');
+            }
+        });
+
+        // Select predefined scenario
+        function selectScenario(link) {
+            window.location.href = link;
+        }
+
+        // Create new scenario
+        function createNewScenario() {
+            const query = searchInput.value.trim();
+            if (query) {
+                document.getElementById('titleScenario').value = query;
+            }
+            searchInput.value = '';
+            searchDropdown.classList.remove('show');
+            formSection.classList.add('show');
+            successMessage.classList.remove('show');
+            document.getElementById('titleScenario').focus();
+        }
+
+        // Title suggestions
+        titleSuggestions.forEach(tag => {
+            tag.addEventListener('click', () => {
+                titleSuggestions.forEach(t => t.classList.remove('active'));
+                tag.classList.add('active');
+                document.getElementById('titleScenario').value = tag.dataset.value;
+                setTimeout(() => {
+                    tag.classList.remove('active');
+                }, 500);
+            });
+        });
+
+        // Checklist management
+        let checklistCount = 2; // Default 2 items
+        const maxChecklistItems = 4;
+
+        function addChecklistItem() {
+            if (checklistCount >= maxChecklistItems) {
+                addChecklistBtn.disabled = true;
+                return;
+            }
+
+            const newItem = document.createElement('div');
+            newItem.className = 'checklist-item';
+            newItem.innerHTML = `
+                <input type="text" placeholder="Nhập checklist item" required>
+                <button type="button" class="remove-btn" onclick="removeChecklistItem(this)">×</button>
+            `;
+            checklistGroup.appendChild(newItem);
+            checklistCount++;
+
+            updateChecklistButtons();
+        }
+
+        function removeChecklistItem(btn) {
+            if (checklistCount <= 2) return;
+            btn.parentElement.remove();
+            checklistCount--;
+            updateChecklistButtons();
+        }
+
+        function updateChecklistItems() {
+            const items = checklistGroup.querySelectorAll('.checklist-item');
+            items.forEach((item, index) => {
+                const removeBtn = item.querySelector('.remove-btn');
+                if (items.length > 2) {
+                    removeBtn.style.display = 'flex';
+                } else {
+                    removeBtn.style.display = 'none';
+                }
+            });
+        }
+
+        function updateChecklistButtons() {
+            const items = checklistGroup.querySelectorAll('.checklist-item');
+            items.forEach((item, index) => {
+                const removeBtn = item.querySelector('.remove-btn');
+                if (items.length > 2) {
+                    removeBtn.style.display = 'flex';
+                } else {
+                    removeBtn.style.display = 'none';
+                }
+            });
+            addChecklistBtn.disabled = items.length >= maxChecklistItems;
+        }
+
+        // Form submission
+        scenarioForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Get form data
+            const formData = {
+                title: document.getElementById('titleScenario').value.trim(),
+                aiRole: document.getElementById('aiRole').value.trim(),
+                userRole: document.getElementById('userRole').value.trim(),
+                extraInfo: document.getElementById('extraInfo').value.trim(),
+                checklist: Array.from(checklistGroup.querySelectorAll('input')).map(input => input.value.trim()).filter(v => v)
+            };
+
+            // Validate
+            if (!formData.title || !formData.aiRole || !formData.userRole) {
+                alert('Vui lòng điền đầy đủ các trường bắt buộc (*)');
+                return;
+            }
+
+            if (formData.checklist.length < 2) {
+                alert('Vui lòng nhập ít nhất 2 checklist items');
+                return;
+            }
+
+            // Simulate API call
+            console.log('Creating scenario:', formData);
+
+            // Show success message
+            formSection.classList.remove('show');
+            successMessage.classList.add('show');
+
+            // Here you would typically send data to backend
+            // For now, we'll store it in localStorage
+            const scenarios = JSON.parse(localStorage.getItem('customScenarios') || '[]');
+            scenarios.push({
+                ...formData,
+                id: Date.now(),
+                createdAt: new Date().toISOString()
+            });
+            localStorage.setItem('customScenarios', JSON.stringify(scenarios));
+        });
+
+        // Reset form
+        function resetForm() {
+            scenarioForm.reset();
+            checklistGroup.innerHTML = `
+                <div class="checklist-item">
+                    <input type="text" placeholder="Ví dụ: Giới thiệu rõ ràng về dự án" required>
+                    <button type="button" class="remove-btn" onclick="removeChecklistItem(this)" style="display: none;">×</button>
+                </div>
+                <div class="checklist-item">
+                    <input type="text" placeholder="Ví dụ: Trình bày timeline và budget" required>
+                    <button type="button" class="remove-btn" onclick="removeChecklistItem(this)" style="display: none;">×</button>
+                </div>
+            `;
+            checklistCount = 2;
+            updateChecklistButtons();
+            formSection.classList.remove('show');
+            successMessage.classList.remove('show');
+            searchInput.value = '';
+        }
+
+        // Start practice
+        function startPractice() {
+            const scenarios = JSON.parse(localStorage.getItem('customScenarios') || '[]');
+            if (scenarios.length > 0) {
+                const latestScenario = scenarios[scenarios.length - 1];
+                // Pass scenario data to practice page
+                sessionStorage.setItem('currentScenario', JSON.stringify(latestScenario));
+                window.location.href = 'speakee-interview-web.html';
+            }
+        }
+
+        // Initialize
+        updateChecklistButtons();
+    </script>
+</body>
+</html>
+
