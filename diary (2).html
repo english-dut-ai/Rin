@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Diary Insights — Demo (Updated)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+    *{font-family:'Manrope',sans-serif}
+
+    /* tooltip */
+    .tooltip{position:relative}
+    .tooltip .tip{position:absolute;bottom:110%;left:50%;transform:translateX(-50%) scale(.95);background:rgba(17,24,39,.95);color:#fff;padding:6px 8px;border-radius:8px;font-size:12px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity 150ms ease,transform 150ms ease}
+    .tooltip:hover .tip{opacity:1;transform:translateX(-50%) scale(1)}
+
+    /* make chart bars look like pills with soft top shading like the sample */
+    .bar-outer{background:linear-gradient(180deg,#F0E9FF, #F7F4FF);border-radius:12px;padding:6px;display:flex;align-items:flex-end}
+    .bar-inner{background:linear-gradient(180deg,#8B5CF6,#7C3AED);width:100%;border-top-left-radius:10px;border-top-right-radius:10px;border-bottom-left-radius:6px;border-bottom-right-radius:6px;transition:height 600ms cubic-bezier(.2,.9,.2,1)}
+    .compact-card{display:flex;align-items:center;gap:50px;background:#fff;border-radius:12px;padding:12px;border:1px solid rgba(15,23,42,0.05);box-shadow:0 4px 12px rgba(2,6,23,0.03)}
+    .compact-date{width:64px;text-align:center;color:#111827}
+    .compact-center{display:flex;gap:60px;align-items:center;flex:1}
+    .compact-score{width:44px;height:44px;border-radius:999px;display:flex;align-items:center;justify-content:center;border:2px solid green;background:green;font-weight:600}
+
+    /* ensure mini-bar boxes don't collapse on small screens */
+    #daily-words-chart .mini-bar{min-width:0}
+  </style>
+</head>
+<body class="bg-[#F7F8FA] min-h-screen p-4 md:p-8">
+  <div class="w-full max-w-2xl mx-auto bg-white rounded-[28px] shadow-2xl overflow-hidden border border-gray-200">
+    <div class="p-6 space-y-6 bg-[#F7F8FA]">
+
+      <div class="flex justify-between items-center">
+        <button class="p-2 hover:bg-gray-200 rounded-full" aria-label="back">‹</button>
+        <h1 class="text-xl font-bold text-gray-900">Insights</h1>
+        <button class="p-2 hover:bg-gray-200 rounded-full" aria-label="close">✕</button>
+      </div>
+
+      <div class="bg-gray-200 p-1.5 rounded-full flex justify-between items-center text-sm font-semibold">
+        <button class="w-1/3 py-2 text-gray-600 rounded-full">Today</button>
+        <button class="w-1/3 py-2 bg-purple-600 text-white rounded-full shadow-md">Weekly</button>
+        <button class="w-1/3 py-2 text-gray-600 rounded-full">Monthly</button>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
+        <div class="p-3 bg-purple-100 rounded-lg">
+          ✨
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900">Weekly AI Insights</h3>
+          <p class="text-xs text-gray-500 mt-1">Get a weekly in depth ai analysis of your themes, patterns, and more</p>
+        </div>
+      </div>
+
+      <!-- DAILY WORDS SECTION: static demo matching sample visual -->
+      <div class="relative bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="font-bold text-gray-900">Daily words</h3>
+          <button class="p-2 bg-gray-100 rounded-lg">📅</button>
+        </div>
+
+        <div id="daily-words-chart" class="flex justify-between items-end h-44 space-x-3 text-center px-3">
+          <!-- Mon -->
+          <div class="flex-1 flex flex-col items-center justify-end">
+            <div class="w-full h-32 bar-outer rounded-lg flex items-end">
+              <div class="bar-inner" style="height:62%"></div>
+            </div>
+            <span class="text-xs text-gray-500 mt-3">Mon</span>
+          </div>
+
+          <!-- Tue -->
+          <div class="flex-1 flex flex-col items-center justify-end">
+            <div class="w-full h-32 bar-outer rounded-lg flex items-end">
+              <div class="bar-inner" style="height:36%"></div>
+            </div>
+            <span class="text-xs text-gray-500 mt-3">Tue</span>
+          </div>
+
+          <!-- Wed -->
+          <div class="flex-1 flex flex-col items-center justify-end">
+            <div class="w-full h-32 bar-outer rounded-lg flex items-end">
+              <div class="bar-inner" style="height:50%"></div>
+            </div>
+            <span class="text-xs text-gray-500 mt-3">Wed</span>
+          </div>
+
+          <!-- Thu (tall) -->
+          <div class="flex-1 flex flex-col items-center justify-end">
+            <div class="w-full h-32 bar-outer rounded-lg flex items-end">
+              <div class="bar-inner" style="height:82%"></div>
+            </div>
+            <span class="text-xs text-gray-500 mt-3">Thu</span>
+          </div>
+
+          <!-- Fri -->
+          <div class="flex-1 flex flex-col items-center justify-end">
+            <div class="w-full h-32 bar-outer rounded-lg flex items-end">
+              <div class="bar-inner" style="height:58%"></div>
+            </div>
+            <span class="text-xs text-gray-500 mt-3">Fri</span>
+          </div>
+
+          <!-- Sat -->
+          <div class="flex-1 flex flex-col items-center justify-end">
+            <div class="w-full h-32 bar-outer rounded-lg flex items-end">
+              <div class="bar-inner" style="height:46%"></div>
+            </div>
+            <span class="text-xs text-gray-500 mt-3">Sat</span>
+          </div>
+
+          <!-- Sun -->
+          <div class="flex-1 flex flex-col items-center justify-end">
+            <div class="w-full h-32 bar-outer rounded-lg flex items-end">
+              <div class="bar-inner" style="height:66%"></div>
+            </div>
+            <span class="text-xs text-gray-500 mt-3">Sun</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Joyful card -->
+      <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="font-bold text-gray-900">Joyful</h3>
+          <button class="p-1 hover:bg-gray-200 rounded-full">...</button>
+        </div>
+        <p class="text-sm text-gray-500 mb-5">Common emotion</p>
+        <div class="space-y-4">
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-medium text-gray-600">90</span>
+            <div class="flex-1 h-3 bg-gray-200 rounded-full">
+              <div class="h-3 bg-green-500 rounded-full" style="width: 90%"></div>
+            </div>
+            <span class="text-xl">🤗</span>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-medium text-gray-600">82</span>
+            <div class="flex-1 h-3 bg-gray-200 rounded-full">
+              <div class="h-3 bg-yellow-400 rounded-full" style="width: 82%"></div>
+            </div>
+            <span class="text-xl">😂</span>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-medium text-gray-600">90</span>
+            <div class="flex-1 h-3 bg-gray-200 rounded-full">
+              <div class="h-3 bg-purple-500 rounded-full" style="width: 90%"></div>
+            </div>
+            <span class="text-xl">😊</span>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-2">
+      <h1 class="text-2xl font-bold">Practice — Scores</h1>
+    </div>
+
+    <!-- Fluency table -->
+    <div class="bg-white p-4 rounded-xl border">
+      <div class="grid grid-cols-12 gap-4 text-sm font-semibold text-gray-600 px-2 py-3">
+        <div class="col-span-2">Date</div>
+        <div class="col-span-2 text-center">Score</div>
+        <div class="col-span-2 text-center">Fluency</div>
+        <div class="col-span-3 text-center">Pronunciation</div>
+        <div class="col-span-2 text-center">Accuracy</div>
+        <div class="col-span-1"></div>
+      </div>
+      <div id="list" class="space-y-3 mt-3 px-2">
+        <!-- rows injected by JS -->
+      </div>
+    </div>
+    <br>
+
+    <!-- Wellbeing list: new section like the image -->
+    <div class="compact-card mb-4">
+      <div class="compact-date">
+        <div class="text-sm">Jan</div>
+        <div class="text-lg font-semibold">31</div>
+      </div>
+
+      <div class="compact-center">
+        <div style = "width:44px;height:44px;border-radius:999px;display:flex;align-items:center;justify-content:center;border:2px solid rgb(255, 153, 0);background:rgb(255, 153, 0);font-weight:600"> 70</div>
+
+        
+      <div style = "width:44px;height:44px;border-radius:999px;display:flex;align-items:center;justify-content:center;border:2px solid rgb(255, 0, 0);background:rgb(255, 0, 0);font-weight:600"> 45</div>
+      <div style = "width:44px;height:44px;border-radius:999px;display:flex;align-items:center;justify-content:center;border:2px solid rgb(255, 153, 0);background:rgb(255, 153, 0);font-weight:600"> 75</div>
+
+      </div>
+      
+      <div class="compact-score">90</div>
+    
+
+      <div class="compact-arrow">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+      </div>
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+  <script>
+    // small script to animate bars on load so they're visible in previews
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const inners = document.querySelectorAll('.bar-inner');
+      inners.forEach((el, idx)=>{
+        const h = el.style.height || '50%';
+        el.style.height = '0%';
+        setTimeout(()=> el.style.height = h, 120 + idx*80);
+      });
+    });
+  </script>
+
+</body>
+</html>
